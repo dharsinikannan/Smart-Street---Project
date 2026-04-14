@@ -1,0 +1,15 @@
+require("@nomicfoundation/hardhat-toolbox");
+require('dotenv').config({ path: '../backend/.env' });
+
+const PRIVATE_KEY = process.env.WALLET_PRIVATE_KEY || "0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80";
+
+module.exports = {
+  solidity: "0.8.20",
+  networks: {
+    hardhat: {},
+    amoy: {
+      url: process.env.POLYGON_RPC_URL || "https://rpc-amoy.polygon.technology",
+      accounts: [PRIVATE_KEY]
+    }
+  }
+};

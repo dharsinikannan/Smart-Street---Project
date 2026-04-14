@@ -1,0 +1,16 @@
+{
+  "app_name": "Smart Street",
+  "search_placeholder": "Buscar tacos, café, hamburguesas...",
+  "login": "Iniciar sesión",
+  "logout": "Cerrar sesión",
+  "verify": "Verificar",
+  "all": "Todos",
+  "busy_zones": "Zonas Concurridas",
+  "vendors_count": "{{count}} vendedores",
+  "open": "ABIERTO",
+  "closed": "CERRADO",
+  "no_vendors": "No se encontraron vendedores cerca.",
+  "loading": "Cargando lugares...",
+  "vendor_workspace": "Espacio de Vendedor",
+  "reviews": "Reseñas y Calificaciones"
+}
