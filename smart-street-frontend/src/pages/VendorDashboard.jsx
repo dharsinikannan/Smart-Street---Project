@@ -193,6 +193,7 @@ export default function VendorDashboard() {
 
     // 1. Handle Space Selection or Search
     if (result.spaceId) {
+      setActiveSection("MAP");
       setIntent("OWNER_DEFINED");
       setSelectedSpaceId(result.spaceId);
       setVoiceStatus("Space identified: " + (result.spaceName || "Unknown"));
@@ -221,7 +222,8 @@ export default function VendorDashboard() {
         const lat = parseFloat(data[0].lat);
         const lon = parseFloat(data[0].lon);
 
-        // Select logic
+        // Switch to map view first so the pin and fly-to are visible
+        setActiveSection("MAP");
         setIntent("REQUEST_NEW");
         handlePinSet([lat, lon]);
         setRequestedRadius(50);

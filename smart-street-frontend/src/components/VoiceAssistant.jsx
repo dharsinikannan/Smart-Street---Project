@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { MicrophoneIcon, SpeakerWaveIcon, XMarkIcon } from "@heroicons/react/24/solid";
 
 export default function VoiceAssistant({ onCommand, isListening, setIsListening, status }) {
@@ -6,6 +6,14 @@ export default function VoiceAssistant({ onCommand, isListening, setIsListening,
   const [manualInput, setManualInput] = useState("");
   const [supported, setSupported] = useState(true);
   const [isBrave, setIsBrave] = useState(false);
+
+  // Use a ref so the recognition handler always calls the latest onCommand
+  // without adding it to the effect dependency array (which would abort
+  // recognition on every re-render caused by interim transcript updates).
+  const onCommandRef = useRef(onCommand);
+  useEffect(() => {
+    onCommandRef.current = onCommand;
+  });
 
   useEffect(() => {
     if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
@@ -55,7 +63,7 @@ export default function VoiceAssistant({ onCommand, isListening, setIsListening,
 
       if (finalTranscript) {
         setTranscript(finalTranscript);
-        onCommand(finalTranscript); // Callback with final text
+        onCommandRef.current(finalTranscript); // Always calls latest handler
         ignoreEnd = true; // We handled it
         setIsListening(false);
       }
@@ -76,7 +84,7 @@ export default function VoiceAssistant({ onCommand, isListening, setIsListening,
           break;
         case "not-allowed":
         case "service-not-allowed":
-          message = "Microphone access denied.";
+          message = "Microphone access denied. Allow mic in browser settings.";
           break;
         case "no-speech":
           message = "No speech detected. Try again.";
@@ -95,7 +103,7 @@ export default function VoiceAssistant({ onCommand, isListening, setIsListening,
 
     recognition.onend = () => {
       // Only close if we haven't already handled strict closing (via error or result)
-      if (isListening && !ignoreEnd) {
+      if (!ignoreEnd) {
         setIsListening(false);
       }
     };
@@ -105,7 +113,9 @@ export default function VoiceAssistant({ onCommand, isListening, setIsListening,
     return () => {
       recognition.abort();
     };
-  }, [isListening, supported, onCommand]);
+  // onCommand intentionally excluded — using ref above to avoid aborting recognition on re-renders
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isListening, supported]);
 
   if (!supported) return null;
 
