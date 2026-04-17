@@ -149,11 +149,11 @@ const ChatWidget = () => {
                      <div className="space-y-2">
                        {msg.results.slice(0, 5).map((item, i) => (
                          <div key={i} className="bg-slate-50 dark:bg-slate-900/50 p-2 rounded border border-slate-100 dark:border-slate-700">
-                            <h3 className="font-bold text-slate-800 dark:text-slate-200 text-xs">{item.business_name || item.space_name || "Unknown"}</h3>
+                            <h3 className="font-bold text-slate-800 dark:text-slate-200 text-xs">{item.business_name || item.space_name || item.name || "Unknown"}</h3>
                             <div className="flex justify-between items-center mt-1">
                                 <span className="text-[10px] bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300 px-1.5 py-0.5 rounded-full">{item.category || "Vendor"}</span>
                                   <div className="flex gap-2">
-                                    <button 
+                                    <button
                                       onClick={() => {
                                         if (item.lat && item.lng) {
                                           setIsOpen(false);
@@ -162,8 +162,8 @@ const ChatWidget = () => {
                                       }}
                                       disabled={!item.lat || !item.lng}
                                       className={`p-1 rounded-full transition-colors ${
-                                        item.lat && item.lng 
-                                          ? "hover:bg-slate-200 dark:hover:bg-slate-700 text-cyan-600 dark:text-cyan-400" 
+                                        item.lat && item.lng
+                                          ? "hover:bg-slate-200 dark:hover:bg-slate-700 text-cyan-600 dark:text-cyan-400"
                                           : "opacity-30 cursor-not-allowed text-slate-400 dark:text-slate-600"
                                       }`}
                                       title={item.lat && item.lng ? "View on Map" : "No location available"}
@@ -172,6 +172,16 @@ const ChatWidget = () => {
                                     </button>
                                   </div>
                             </div>
+                            {(item.phone || item.email || item.address || item.license_number || item.status || item.verified !== undefined) && (
+                              <div className="mt-1.5 space-y-0.5 border-t border-slate-200 dark:border-slate-700 pt-1.5">
+                                {item.phone && <p className="text-[10px] text-slate-600 dark:text-slate-400">Phone: {item.phone}</p>}
+                                {item.email && <p className="text-[10px] text-slate-600 dark:text-slate-400">Email: {item.email}</p>}
+                                {item.address && <p className="text-[10px] text-slate-600 dark:text-slate-400">Address: {item.address}</p>}
+                                {item.license_number && <p className="text-[10px] text-slate-600 dark:text-slate-400">License: {item.license_number}</p>}
+                                {item.status && <p className="text-[10px] text-slate-600 dark:text-slate-400">Status: {item.status}</p>}
+                                {item.verified !== undefined && <p className="text-[10px] text-slate-600 dark:text-slate-400">Verified: {item.verified ? "Yes" : "No"}</p>}
+                              </div>
+                            )}
                          </div>
                        ))}
                        {msg.results.length > 5 && (

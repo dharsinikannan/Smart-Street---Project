@@ -32,6 +32,9 @@ IMPORTANT RULES FOR SQL GENERATION:
 - If the user asks for "flowers", look in vendors.category or vendors.business_name.
 - **CRITICAL**: To show "View on Map" button, we need location. When querying 'vendors', ALWAYS JOIN with 'space_requests' AS sr ON vendors.vendor_id = sr.vendor_id WHERE sr.status = 'APPROVED'. Select 'ST_Y(sr.center::geometry) as lat' and 'ST_X(sr.center::geometry) as lng'.
 - **CRITICAL**: When querying 'spaces' or 'space_requests', ALWAYS use the alias (e.g. s.center or sr.center) for the center column. Select 'ST_Y(center::geometry) as lat' and 'ST_X(center::geometry) as lng'.
+- **CRITICAL**: When querying vendors, ALWAYS select v.business_name and v.category so results display correctly.
+- **CRITICAL**: When the user asks for phone, contact, or any user detail: ALWAYS JOIN vendors v with users u ON v.user_id = u.user_id. Select u.phone, u.name, v.business_name, v.category.
+- **CRITICAL**: When searching by vendor name or business name, use ILIKE '%keyword%' on BOTH v.business_name AND u.name (joined via users) so partial matches work correctly.
 `;
 
 const generateSQL = async (userQuery) => {
